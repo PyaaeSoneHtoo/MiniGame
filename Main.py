@@ -111,7 +111,7 @@ class Main_Frame(ttk.Frame):
         self.label6.grid(row=1,column=2,padx=5,pady=5)
         self.label4 = ttk.Label(self,text='Point :')
         self.label4.grid(row=1,column=3,padx=5,pady=5)
-        self.label5 = ttk.Label(self,text='{}'.format(UserInfo[UserID]['point']),foreground='red')
+        self.label5 = ttk.Label(self,text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))),foreground='red')
         self.label5.grid(row=1,column=4,padx=5,pady=5)
         self.label7 = ttk.Label(self, text='        ')
         self.label7.grid(row=1, column=5, padx=5, pady=5)
@@ -123,12 +123,20 @@ class Main_Frame(ttk.Frame):
         self.button3.grid(row=3,column=0,columnspan=3,padx=10,pady=20,ipady=20)
         self.button4 = ttk.Button(self,text='Rock, Paper, Scissors',width=20,command=self.rcp)
         self.button4.grid(row=3,column=3,columnspan=3,padx=10,pady=20,ipady=20)
-        self.button4 = ttk.Button(self, text='Memorize', width=20)
-        self.button4.grid(row=4, column=0, columnspan=3, padx=10, pady=20, ipady=20)
-        self.button4 = ttk.Button(self, text='Card Flip', width=20)
-        self.button4.grid(row=4, column=3, columnspan=3, padx=10, pady=20, ipady=20)
+        self.button5 = ttk.Button(self, text='Memorize', width=20,command=self.memorize)
+        self.button5.grid(row=4, column=0, columnspan=3, padx=10, pady=20, ipady=20)
+        self.button6 = ttk.Button(self, text='Card Flip', width=20,command=self.cardflip)
+        self.button6.grid(row=4, column=3, columnspan=3, padx=10, pady=20, ipady=20)
         self.button7 = ttk.Button(self,text='Back',width=7,command=self.back)
         self.button7.grid(row=5,column=0,columnspan=2,padx=5,pady=100)
+
+    def memorize(self):
+        Main_Frame.destroy(self)
+        Memorize_Frame(app)
+
+    def cardflip(self):
+        Main_Frame.destroy(self)
+        CardFlip_Frame(app)
 
     def back(self):
         Main_Frame.destroy(self)
@@ -175,7 +183,7 @@ class CoinFlip_Frame(ttk.Frame):
         self.label6.grid(row=1, column=2, padx=5, pady=5)
         self.label4 = ttk.Label(self, text='Point :')
         self.label4.grid(row=1, column=3, padx=5, pady=5)
-        self.label5 = ttk.Label(self, text='{}'.format(UserInfo[UserID]['point']), foreground='red')
+        self.label5 = ttk.Label(self, text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))), foreground='red')
         self.label5.grid(row=1, column=4, padx=5, pady=5)
         self.label7 = ttk.Label(self, text='        ')
         self.label7.grid(row=1, column=5, padx=5, pady=5)
@@ -209,9 +217,9 @@ class CoinFlip_Frame(ttk.Frame):
         point = self.input1.get()
         userchoice = self.choicevar.get()
         try:
-            point = int(point)
+            point = round(float(point), 2)
             if 0 >= point or point > UserInfo[UserID]['point']:
-                CustomMessageBox(title='Error!',message='bet Amount should not be over {} or 0 and below 0.'.format(UserInfo[UserID]['point']))
+                CustomMessageBox(title='Error!',message='bet Amount should not be over {} or 0 and below 0.'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))))
                 CoinFlip_Frame.destroy(self)
                 CoinFlip_Frame(app)
             else:
@@ -229,8 +237,8 @@ class CoinFlip_Frame(ttk.Frame):
                     self.button2.grid(row=9, column=2, padx=5, pady=5)
                     self.button3.grid(row=9, column=3, padx=5, pady=5)
                     UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - point
-        except:
-            CustomMessageBox(title='Error!',message='Bet Point should be Integer Only.')
+        except ValueError:
+            CustomMessageBox(title='Error!',message='Bet Point should be a valid number.')
             CoinFlip_Frame.destroy(self)
             CoinFlip_Frame(app)
 
@@ -262,7 +270,7 @@ class GuessGame_Frame(ttk.Frame):
         self.label6.grid(row=1, column=2, padx=5, pady=5)
         self.label4 = ttk.Label(self, text='Point :')
         self.label4.grid(row=1, column=3, padx=5, pady=5)
-        self.label5 = ttk.Label(self, text='{}'.format(UserInfo[UserID]['point']), foreground='red')
+        self.label5 = ttk.Label(self, text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))), foreground='red')
         self.label5.grid(row=1, column=4, padx=5, pady=5)
         self.label7 = ttk.Label(self, text='        ')
         self.label7.grid(row=1, column=5, padx=5, pady=5)
@@ -307,9 +315,9 @@ class GuessGame_Frame(ttk.Frame):
         self.button2.config(state='disable')
         betamt = self.input1.get()
         try:
-            betamt = int(betamt)
+            betamt = round(float(betamt), 2)
             if betamt <= 0 or betamt > UserInfo[UserID]['point']:
-                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format(UserInfo[UserID]['point']))
+                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))))
                 GuessGame_Frame.destroy(self)
                 GuessGame_Frame(app)
             else:
@@ -317,18 +325,18 @@ class GuessGame_Frame(ttk.Frame):
                 self.label11.grid(row=5,column=0,columnspan=6,padx=5,pady=5)
                 if str(self.choicevar.get()) == str(self.randomchoice):
                     self.label12.grid(row=6,column=0,columnspan=6,padx=5,pady=5)
-                    UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + (betamt *10)
+                    UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + round(betamt * 10, 2)
                     self.label14.grid(row=7,column=0,columnspan=6,padx=5,pady=5)
                     self.button3.grid(row=8,column=2,padx=5,pady=5)
                     self.button4.grid(row=8,column=3,padx=5,pady=5)
                 else:
                     self.label13.grid(row=6,column=0,columnspan=6,padx=5,pady=5)
-                    UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - betamt
+                    UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - round(betamt, 2)
                     self.label14.grid(row=7, column=0, columnspan=6, padx=5, pady=5)
                     self.button3.grid(row=8, column=2, padx=5, pady=5)
                     self.button4.grid(row=8, column=3, padx=5, pady=5)
-        except:
-            CustomMessageBox(title='Error!!',message='Bet Amount should be integer only')
+        except ValueError:
+            CustomMessageBox(title='Error!!',message='Bet Amount should be a valid number')
             GuessGame_Frame.destroy(self)
             GuessGame_Frame(app)
 
@@ -401,7 +409,7 @@ class RollDice_Frame(ttk.Frame):
         self.label6.grid(row=1, column=2, padx=5, pady=5)
         self.label4 = ttk.Label(self, text='Point :')
         self.label4.grid(row=1, column=3, padx=5, pady=5)
-        self.label5 = ttk.Label(self, text='{}'.format(UserInfo[UserID]['point']), foreground='red')
+        self.label5 = ttk.Label(self, text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))), foreground='red')
         self.label5.grid(row=1, column=4, padx=5, pady=5)
         self.label7 = ttk.Label(self, text='        ')
         self.label7.grid(row=1, column=5, padx=5, pady=5)
@@ -466,9 +474,9 @@ class RollDice_Frame(ttk.Frame):
         usrch = self.choicevarnumber.get()
         betamt = self.input1.get()
         try:
-            betamt = int(betamt)
+            betamt = round(float(betamt), 2)
             if betamt <= 0 or betamt > UserInfo[UserID]['point']:
-                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format(UserInfo[UserID]['point']))
+                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))))
             else:
                 self.input1.config(state='disable')
                 self.button3.config(state='disable')
@@ -477,29 +485,29 @@ class RollDice_Frame(ttk.Frame):
                 if self.ans % 2 == 0:
                     self.text1 = 'The answer is "Even".'
                     if self.choicevar.get() == 'Even':
-                        self.amount = betamt * 2
+                        self.amount = round(betamt * 2, 2)
                         if usrch == str(self.ans):
-                            UserInfo[UserID]['point'] = UserInfo[UserID]['point'] +(self.amount * 50)
+                            UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + round(self.amount * 50, 2)
                             self.text3 = 'Congratulation You win for both.'
                         else:
                             UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + self.amount
                             self.text3 = 'Congratulation you win for "Even".\nBut you lose for correct number.'
                     else:
                         self.text3 = 'Sorry,you lose.'
-                        UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - betamt
+                        UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - round(betamt, 2)
                 else:
                     self.text1 = 'The answer is "Odd".'
                     if self.choicevar.get() == 'Odd':
-                        self.amount = betamt * 2
+                        self.amount = round(betamt * 2, 2)
                         if usrch == str(self.ans):
-                            UserInfo[UserID]['point'] = UserInfo[UserID]['point'] +(self.amount * 50)
+                            UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + round(self.amount * 50, 2)
                             self.text3 = 'Congratulation You win for both.'
                         else:
                             UserInfo[UserID]['point'] = UserInfo[UserID]['point'] + self.amount
                             self.text3 = 'Congratulation you win for "Odd".\nBut you lose for correct number.'
                     else:
                         self.text3 = 'Sorry,you lose.'
-                        UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - betamt
+                        UserInfo[UserID]['point'] = UserInfo[UserID]['point'] - round(betamt, 2)
                 self.text2 = 'The correct number is "{}".'.format(self.ans)
                 self.label13.grid(row=8, column=0, columnspan=6, padx=5, pady=5)
                 self.label13.config(text='{}\n{}'.format(self.text1, self.text2))
@@ -550,7 +558,7 @@ class Rock_Scissor_Paper(ttk.Frame):
         self.label6.grid(row=1, column=2, padx=5, pady=5)
         self.label4 = ttk.Label(self, text='Point :')
         self.label4.grid(row=1, column=3, padx=5, pady=5)
-        self.label5 = ttk.Label(self, text='{}'.format(UserInfo[UserID]['point']), foreground='red')
+        self.label5 = ttk.Label(self, text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))), foreground='red')
         self.label5.grid(row=1, column=4, padx=5, pady=5)
         self.label7 = ttk.Label(self, text='        ')
         self.label7.grid(row=1, column=5, padx=5, pady=5)
@@ -596,9 +604,9 @@ class Rock_Scissor_Paper(ttk.Frame):
     def confirmbtn_2(self):
         betamt = self.input1.get()
         try:
-            betamt = int(betamt)
+            betamt = round(float(betamt), 2)
             if betamt <= 0 or betamt > UserInfo[UserID]['point']:
-                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format(UserInfo[UserID]['point']))
+                CustomMessageBox(title='Error!!',message='Bet amount should not be 0 or less than 0 and\nshould not be greater than {}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))))
             else:
                 self.label10.grid(row=6,column=0,columnspan=3,padx=5,pady=5)
                 self.label11.grid(row=6,column=3,columnspan=3,padx=5,pady=5)
@@ -618,14 +626,14 @@ class Rock_Scissor_Paper(ttk.Frame):
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Lose',foreground='red')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - betamt
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - round(betamt, 2)
                     elif self.choicevar.get() == 'Scissor':
                         self.i = IMG.open('4006.png')
                         self.i1 = self.i.resize((110,110))
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Win',foreground='green')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + (betamt * 3)
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + round(betamt * 3, 2)
                 elif self.C_Guess == 2:
                     if self.choicevar.get() == 'Paper':
                         self.i = IMG.open('4004.png')
@@ -633,7 +641,7 @@ class Rock_Scissor_Paper(ttk.Frame):
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Win',foreground='green')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + (betamt * 3)
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + round(betamt * 3, 2)
                     elif self.choicevar.get() == 'Rock':
                         self.i = IMG.open('4005.png')
                         self.i1 = self.i.resize((110,110))
@@ -646,7 +654,7 @@ class Rock_Scissor_Paper(ttk.Frame):
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Lose',foreground='red')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - betamt
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - round(betamt, 2)
                 elif self.C_Guess == 3:
                     if self.choicevar.get() == 'Paper':
                         self.i = IMG.open('4004.png')
@@ -654,14 +662,14 @@ class Rock_Scissor_Paper(ttk.Frame):
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Lose',foreground='red')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - betamt
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] - round(betamt, 2)
                     elif self.choicevar.get() == 'Rock':
                         self.i = IMG.open('4005.png')
                         self.i1 = self.i.resize((110,110))
                         self.img2 = ImageTk.PhotoImage(self.i1)
                         self.label11.config(image=self.img2)
                         self.label12.config(text='You Win',foreground='green')
-                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + (betamt * 3)
+                        UserInfo[UserID]['point']=UserInfo[UserID]['point'] + round(betamt * 3, 2)
                     elif self.choicevar.get() == 'Scissor':
                         self.i = IMG.open('4006.png')
                         self.i1 = self.i.resize((110,110))
@@ -680,6 +688,474 @@ class Rock_Scissor_Paper(ttk.Frame):
 
     def back(self):
         Rock_Scissor_Paper.destroy(self)
+        Main_Frame(app)
+
+
+
+class CardFlip_Frame(ttk.Frame):
+    def __init__(self, container):
+        super().__init__(container)
+        self.pack()
+        
+        self.multipliers = {1: 0.8, 2: 1, 3: 1.5, 4: 2, 5: 4, 6: 8, 7: 10, 8: 20}
+        self.betamt = 0
+        self.matches_found = 0
+        self.wrong_attempts = 0
+        self.max_wrongs = 3
+        
+        self.cards = []
+        self.buttons = []
+        self.first_flipped = None
+        self.second_flipped = None
+        self.lock_board = False
+        
+        self.images = {} # Will store PhotoImage objects so they aren't garbage collected
+        self.cover_image = None
+        
+        self.setup_ui()
+        
+    def setup_ui(self):
+        self.label1 = ttk.Label(self, text='Welcome to Card Flip Game', font=('Times New Roman', 20, 'bold'))
+        self.label1.grid(row=0, column=0, columnspan=6, padx=5, pady=20)
+        
+        ttk.Label(self, text='User ID :').grid(row=1, column=0, padx=5, pady=5)
+        ttk.Label(self, text='{}'.format(UserID), foreground='red').grid(row=1, column=1, padx=5, pady=5)
+        
+        ttk.Label(self, text='Point :').grid(row=1, column=3, padx=5, pady=5)
+        self.point_label = ttk.Label(self, text='{:.2f}'.format(float(UserInfo[UserID]['point'])), foreground='red')
+        self.point_label.grid(row=1, column=4, padx=5, pady=5)
+        
+        self.bet_frame = ttk.Frame(self)
+        self.bet_frame.grid(row=2, column=0, columnspan=6, pady=10)
+        ttk.Label(self.bet_frame, text='Bet Amount: ').pack(side='left', padx=5)
+        self.bet_input = ttk.Entry(self.bet_frame, width=10, justify='center')
+        self.bet_input.pack(side='left', padx=5)
+        self.start_btn = ttk.Button(self.bet_frame, text='Start Game', command=self.start_game)
+        self.start_btn.pack(side='left', padx=5)
+        
+        self.status_label = ttk.Label(self, text='', font=('Arial', 14, 'bold'))
+        self.status_label.grid(row=3, column=0, columnspan=6, pady=5)
+        
+        self.grid_frame = ttk.Frame(self)
+        
+        self.action_frame = ttk.Frame(self)
+        self.continue_btn = ttk.Button(self.action_frame, text='Continue', command=self.resume_game)
+        self.stop_btn = ttk.Button(self.action_frame, text='Stop & Claim', command=self.cash_out)
+        
+        self.about_btn = ttk.Button(self, text='About Game', command=self.about)
+        self.about_btn.grid(row=6, column=3, columnspan=3, pady=20, padx=5)
+        self.back_btn = ttk.Button(self, text='Back', command=self.back)
+        self.back_btn.grid(row=6, column=0, columnspan=3, pady=20, padx=5)
+
+    def update_points(self):
+        self.point_label.config(text='{:.2f}'.format(float(UserInfo[UserID]['point'])))
+
+    def load_images(self):
+        # Create a simple colored cover since we don't have a cover image
+        try:
+            for i in range(1, 9):
+                for j in range(2):
+                    card_id = f'600{i}-{j}'
+                    img = IMG.open(f'{card_id}.png')
+                    img = img.resize((50, 90)) # 5x9 scale approx (width=50, height=90)
+                    self.images[card_id] = ImageTk.PhotoImage(img)
+        except Exception as e:
+            CustomMessageBox('Error', f'Could not load card images: {e}')
+            return False
+        return True
+
+    def start_game(self):
+        try:
+            amt = round(float(self.bet_input.get()), 2)
+        except ValueError:
+            CustomMessageBox('Error', 'Please enter a valid number!')
+            return
+            
+        if amt <= 0:
+            CustomMessageBox('Error', 'Bet amount must be greater than 0!')
+            return
+            
+        if amt > UserInfo[UserID]['point']:
+            CustomMessageBox('Error', 'You do not have enough points for this bet!')
+            return
+            
+        if not self.load_images():
+            return
+            
+        self.betamt = amt
+        UserInfo[UserID]['point'] -= self.betamt
+        self.update_points()
+        
+        self.start_btn.config(state='disabled')
+        self.bet_input.config(state='disabled')
+        self.back_btn.config(state='disabled')
+        
+        self.matches_found = 0
+        self.wrong_attempts = 0
+        
+        self.status_label.config(text='Memorize the cards!', foreground='blue')
+        self.grid_frame.grid(row=4, column=0, columnspan=6, pady=10)
+        self.setup_cards()
+
+    def setup_cards(self):
+        for btn in self.buttons:
+            btn.destroy()
+        self.buttons.clear()
+        
+        self.cards = []
+        for i in range(1, 9):
+            self.cards.append({'id': f'600{i}-0', 'match_group': i, 'flipped': False})
+            self.cards.append({'id': f'600{i}-1', 'match_group': i, 'flipped': False})
+            
+        random.shuffle(self.cards)
+        
+        for i, card in enumerate(self.cards):
+            # Show the cards initially
+            btn = tk.Button(self.grid_frame, image=self.images[card['id']], bg='white', width=50, height=90, 
+                            command=lambda idx=i: self.flip_card(idx))
+            btn.grid(row=i//4, column=i%4, padx=5, pady=5)
+            self.buttons.append(btn)
+            
+        # Lock the board during the preview phase
+        self.lock_board = True
+        
+        # After 2 seconds, turn them all back into blocks
+        self.after(2000, self.hide_all_cards)
+
+    def hide_all_cards(self):
+        for i, btn in enumerate(self.buttons):
+            # Change back to gray blocks
+            btn.config(image='', bg='gray', width=5, height=5)
+            self.cards[i]['flipped'] = False
+        
+        self.lock_board = False
+        self.status_label.config(text=f'Find the matching pairs! Errors left: {self.max_wrongs}', foreground='blue')
+            
+    def flip_card(self, idx):
+        if self.lock_board or self.cards[idx]['flipped']:
+            return
+            
+        self.cards[idx]['flipped'] = True
+        card_id = self.cards[idx]['id']
+        
+        self.buttons[idx].config(image=self.images[card_id], bg='white', width=50, height=90)
+        
+        if self.first_flipped is None:
+            self.first_flipped = idx
+        else:
+            self.second_flipped = idx
+            self.check_match()
+            
+    def check_match(self):
+        idx1 = self.first_flipped
+        idx2 = self.second_flipped
+        
+        if self.cards[idx1]['match_group'] == self.cards[idx2]['match_group']:
+            # Match found
+            self.matches_found += 1
+            self.first_flipped = None
+            self.second_flipped = None
+            
+            if self.matches_found == 8:
+                self.game_won()
+            else:
+                self.status_label.config(text=f'Match! Matches: {self.matches_found}/8. Errors left: {self.max_wrongs - self.wrong_attempts}', foreground='green')
+        else:
+            # Not a match
+            self.lock_board = True
+            self.wrong_attempts += 1
+            self.status_label.config(text=f'Wrong! Errors left: {self.max_wrongs - self.wrong_attempts}', foreground='red')
+            self.after(1000, self.unflip_cards)
+
+    def unflip_cards(self):
+        idx1 = self.first_flipped
+        idx2 = self.second_flipped
+        
+        self.cards[idx1]['flipped'] = False
+        self.cards[idx2]['flipped'] = False
+        
+        self.buttons[idx1].config(image='', bg='gray', width=5, height=5)
+        self.buttons[idx2].config(image='', bg='gray', width=5, height=5)
+        
+        self.first_flipped = None
+        self.second_flipped = None
+        
+        if self.wrong_attempts >= self.max_wrongs:
+            self.lock_board = True
+            self.status_label.config(text='3 Wrongs! Game Over. You lose!', foreground='red')
+            self.reset_ui()
+        else:
+            self.prompt_cash_out_or_continue()
+            
+    def prompt_cash_out_or_continue(self):
+        self.lock_board = True
+        
+        if self.matches_found == 0:
+            # If they haven't matched anything yet, they can only continue playing
+            self.status_label.config(text=f'Wrong! {self.wrong_attempts}/3 errors. Continue playing?', foreground='purple')
+            self.action_frame.grid(row=5, column=0, columnspan=6, pady=10)
+            self.continue_btn.pack(side='left', padx=10)
+            self.stop_btn.pack_forget()
+        else:
+            multiplier = self.multipliers.get(self.matches_found, 1)
+            win_amt = round(self.betamt * multiplier, 2)
+            self.status_label.config(text=f'Wrong! {self.wrong_attempts}/3 errors. Continue or Cash out {win_amt} pts?', foreground='purple')
+            self.action_frame.grid(row=5, column=0, columnspan=6, pady=10)
+            self.continue_btn.pack(side='left', padx=10)
+            self.stop_btn.pack(side='left', padx=10)
+
+    def resume_game(self):
+        self.lock_board = False
+        self.action_frame.grid_forget()
+        self.status_label.config(text=f'Find the pairs! Errors left: {self.max_wrongs - self.wrong_attempts}', foreground='blue')
+
+    def game_won(self):
+        multiplier = self.multipliers.get(8, 20)
+        win_amt = round(self.betamt * multiplier, 2)
+        UserInfo[UserID]['point'] += win_amt
+        self.update_points()
+        self.status_label.config(text=f'You found all pairs! You won {win_amt} points!', foreground='green')
+        self.reset_ui()
+
+    def cash_out(self):
+        multiplier = self.multipliers.get(self.matches_found, 1)
+        win_amt = round(self.betamt * multiplier, 2)
+        UserInfo[UserID]['point'] += win_amt
+        self.update_points()
+        
+        self.status_label.config(text=f'You cashed out {win_amt} points!', foreground='green')
+        self.action_frame.grid_forget()
+        self.reset_ui()
+
+    def reset_ui(self):
+        numpy.save('db.npy', UserInfo)
+        self.start_btn.config(state='normal')
+        self.bet_input.config(state='normal')
+        self.back_btn.config(state='normal')
+        
+        # Expose the board slightly for 2 seconds then hide it
+        self.after(2000, lambda: self.grid_frame.grid_forget())
+
+    def about(self):
+        msg = (
+            "Card Flip Game!\n"
+            "Find all 8 matching pairs. You have 3 lives (errors).\n"
+            "If you make wrong guesses, you can cash out your current progress or continue.\n"
+            "Payout Multipliers:\n"
+            "1 Match: 0.8x bet\n"
+            "2 Matches: 1x bet\n"
+            "3 Matches: 1.5x bet\n"
+            "4 Matches: 2x bet\n"
+            "5 Matches: 4x bet\n"
+            "6 Matches: 8x bet\n"
+            "7 Matches: 10x bet\n"
+            "8 Matches: 20x bet"
+        )
+        CustomMessageBox('About Card Flip', msg)
+
+    def back(self):
+        CardFlip_Frame.destroy(self)
+        Main_Frame(app)
+
+class Memorize_Frame(ttk.Frame):
+    def __init__(self, container):
+        super().__init__(container)
+        self.pack()
+        
+        self.multipliers = {1: 0.8, 2: 1, 3: 1.2, 4: 1.5, 5: 2, 6: 3, 7: 5, 8: 10, 9: 100}
+        self.sequence_length = 1
+        self.sequence = []
+        self.player_sequence = []
+        self.betamt = 0
+        self.buttons = []
+        self.playing = False
+        
+        # Header UI
+        self.label1 = ttk.Label(self, text='Welcome to Memorize Game', font=('Times New Roman', 20, 'bold'))
+        self.label1.grid(row=0, column=0, columnspan=6, padx=5, pady=20)
+        
+        ttk.Label(self, text='User ID :').grid(row=1, column=0, padx=5, pady=5)
+        ttk.Label(self, text='{}'.format(UserID), foreground='red').grid(row=1, column=1, padx=5, pady=5)
+        
+        ttk.Label(self, text='Point :').grid(row=1, column=3, padx=5, pady=5)
+        self.point_label = ttk.Label(self, text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))), foreground='red')
+        self.point_label.grid(row=1, column=4, padx=5, pady=5)
+        
+        # Betting UI
+        self.bet_frame = ttk.Frame(self)
+        self.bet_frame.grid(row=2, column=0, columnspan=6, pady=10)
+        ttk.Label(self.bet_frame, text='Bet Amount: ').pack(side='left', padx=5)
+        self.bet_input = ttk.Entry(self.bet_frame, width=10, justify='center')
+        self.bet_input.pack(side='left', padx=5)
+        self.start_btn = ttk.Button(self.bet_frame, text='Start Game', command=self.start_game)
+        self.start_btn.pack(side='left', padx=5)
+        
+        # Grid Frame
+        self.grid_frame = ttk.Frame(self)
+        # Don't grid it yet, hide it until bet is placed
+        # self.grid_frame.grid(row=3, column=0, columnspan=6, pady=20)
+        
+        for i in range(9):
+            btn = tk.Button(self.grid_frame, width=8, height=4, bg='gray', state='disabled',
+                            command=lambda idx=i: self.on_block_click(idx))
+            btn.grid(row=i//3, column=i%3, padx=5, pady=5)
+            self.buttons.append(btn)
+            
+        # Message/Action Frame
+        self.msg_frame = ttk.Frame(self)
+        self.msg_frame.grid(row=4, column=0, columnspan=6, pady=10)
+        self.status_label = ttk.Label(self.msg_frame, text='', font=('Arial', 14, 'bold'))
+        self.status_label.pack(pady=5)
+        
+        self.continue_btn = ttk.Button(self.msg_frame, text='Continue', command=self.next_round)
+        self.stop_btn = ttk.Button(self.msg_frame, text='Stop & Claim', command=self.cash_out)
+        
+        self.back_btn = ttk.Button(self, text='Back', command=self.back)
+        self.back_btn.grid(row=5, column=0, pady=20, padx=5)
+        
+        self.about_btn = ttk.Button(self, text='About Game', command=self.about)
+        self.about_btn.grid(row=5, column=3, pady=20, padx=5)
+
+    def update_points(self):
+        self.point_label.config(text='{}'.format('{:.2f}'.format(float(UserInfo[UserID]['point']))))
+
+    def start_game(self):
+        try:
+            amt = round(float(self.bet_input.get()), 2)
+        except ValueError:
+            CustomMessageBox('Error', 'Please enter a valid number!')
+            return
+            
+        if amt <= 0:
+            CustomMessageBox('Error', 'Bet amount must be greater than 0!')
+            return
+            
+        if amt > UserInfo[UserID]['point']:
+            CustomMessageBox('Error', 'You do not have enough points for this bet!')
+            return
+            
+        self.betamt = amt
+        UserInfo[UserID]['point'] -= self.betamt
+        self.update_points()
+        
+        self.start_btn.config(state='disabled')
+        self.bet_input.config(state='disabled')
+        self.back_btn.config(state='disabled')
+        
+        # Show the 9 blocks!
+        self.grid_frame.grid(row=3, column=0, columnspan=6, pady=20)
+        
+        self.sequence_length = 1
+        self.next_round_logic()
+        
+    def next_round(self):
+        self.sequence_length += 1
+        self.next_round_logic()
+
+    def next_round_logic(self):
+        self.continue_btn.pack_forget()
+        self.stop_btn.pack_forget()
+        self.status_label.config(text=f'Round {self.sequence_length}: Memorize the sequence...', foreground='blue')
+        self.sequence = [random.randint(0, 8) for _ in range(self.sequence_length)]
+        self.player_sequence = []
+        self.playing = False
+        
+        for btn in self.buttons:
+            btn.config(state='disabled', bg='gray')
+            
+        self.after(500, lambda: self.show_sequence(0))
+        
+    def show_sequence(self, idx):
+        if idx < len(self.sequence):
+            block_idx = self.sequence[idx]
+            self.buttons[block_idx].config(bg='yellow')
+            self.after(1000, lambda: self.hide_block_and_next(block_idx, idx))
+        else:
+            self.status_label.config(text='Your turn! Click the blocks in order.', foreground='black')
+            self.playing = True
+            for btn in self.buttons:
+                btn.config(state='normal', bg='gray')
+
+    def hide_block_and_next(self, block_idx, sequence_idx):
+        self.buttons[block_idx].config(bg='gray')
+        self.after(200, lambda: self.show_sequence(sequence_idx + 1))
+
+    def on_block_click(self, idx):
+        if not self.playing:
+            return
+            
+        self.player_sequence.append(idx)
+        current_step = len(self.player_sequence) - 1
+        
+        if self.player_sequence[current_step] != self.sequence[current_step]:
+            # Wrong!
+            self.playing = False
+            self.status_label.config(text='Wrong Sequence! You lose.', foreground='red')
+            for btn in self.buttons:
+                btn.config(state='disabled', bg='gray')
+            self.buttons[idx].config(bg='red')
+            self.reset_ui()
+            return
+            
+        # Highlight momentarily to show it was clicked
+        self.buttons[idx].config(bg='green')
+        self.after(200, lambda: self.buttons[idx].config(bg='gray'))
+            
+        if len(self.player_sequence) == len(self.sequence):
+            # Sequence completed correctly
+            self.playing = False
+            for btn in self.buttons:
+                btn.config(state='disabled')
+                
+            multiplier = self.multipliers.get(self.sequence_length, 100)
+            potential_win = round(self.betamt * multiplier, 2)
+            
+            if self.sequence_length == 9:
+                self.status_label.config(text=f'Max Level Reached! You won {potential_win} points!', foreground='green')
+                UserInfo[UserID]['point'] += potential_win
+                self.update_points()
+                self.reset_ui()
+            else:
+                self.status_label.config(text=f'Correct! Claim {potential_win} pts or Continue?', foreground='green')
+                self.continue_btn.pack(side='left', padx=10, pady=10)
+                self.stop_btn.pack(side='left', padx=10, pady=10)
+
+    def cash_out(self):
+        multiplier = self.multipliers.get(self.sequence_length, 1)
+        win_amt = round(self.betamt * multiplier, 2)
+        UserInfo[UserID]['point'] += win_amt
+        self.update_points()
+        self.status_label.config(text=f'You cashed out {win_amt} points!', foreground='green')
+        self.continue_btn.pack_forget()
+        self.stop_btn.pack_forget()
+        self.reset_ui()
+
+    def reset_ui(self):
+        numpy.save('db.npy', UserInfo)
+        self.start_btn.config(state='normal')
+        self.bet_input.config(state='normal')
+        self.back_btn.config(state='normal')
+        # Hide the blocks again for a new game
+        self.grid_frame.grid_forget()
+        
+    def about(self):
+        msg = (
+            "Memorize the block sequence!\n"
+            "Payout Multipliers:\n"
+            "Level 1: 0.8x bet\n"
+            "Level 2: 1x bet\n"
+            "Level 3: 1.2x bet\n"
+            "Level 4: 1.5x bet\n"
+            "Level 5: 2x bet\n"
+            "Level 6: 3x bet\n"
+            "Level 7: 5x bet\n"
+            "Level 8: 10x bet\n"
+            "Level 9: 100x bet\n"
+        )
+        CustomMessageBox('About Memorize Game', msg)
+
+    def back(self):
+        Memorize_Frame.destroy(self)
         Main_Frame(app)
 
 
@@ -937,7 +1413,7 @@ class Show_UID_Info_Frame(ttk.Frame):
         self.userId = list(UserInfo.keys())
         self.userIdmenu = ttk.Combobox(self,textvariable= self.userIdvar,values= self.userId,state='readonly')
         self.userIdmenu.grid(row=1, column=1, padx=5, pady=5, sticky='ew')
-        self.userIdmenu.set(self.userIdmenu[0])
+        self.userIdmenu.set(self.userId[0])
         self.button1 = ttk.Button(self,text='Show Info',width=20,command=self.showid)
         self.button1.grid(row=2,column=1,padx=5,pady=5)
         self.button2 = ttk.Button(self, text='Back',width=7,command=self.back)
@@ -957,10 +1433,6 @@ class Main(tk.Tk):
         self.configure_window()
         self.create_menu()
         self.protocol("WM_DELETE_WINDOW", self.save_user_info_and_exit)
-        self.tk.call('source','Forest/forest-dark.tcl')
-        self.tk.call('source','Forest/forest-light.tcl')
-        self.tk.call('source','Azure/theme/dark.tcl')
-        self.tk.call('source','Azure/theme/light.tcl')
         Welcome_Frame(self)
 
     def configure_window(self):
@@ -979,10 +1451,6 @@ class Main(tk.Tk):
         file_menu.add_command(label='Exit', command=self.save_user_info_and_exit)
         theme.add_command(label='Sun Valley Light',command=self.sv_light_theme)
         theme.add_command(label='Sun Valley Dark',command=self.sv_dark_theme)
-        theme.add_command(label='Forest Light',command=self.forest_light)
-        theme.add_command(label='Forest Dark',command=self.forest_dark)
-        theme.add_command(label='Azure Light',command=self.azure_light)
-        theme.add_command(label='Azure Dark',command=self.azure_dark)
         theme.add_command(label='Clam',command=self.clam)
         theme.add_command(label='Classic',command=self.classic)
         
@@ -991,18 +1459,6 @@ class Main(tk.Tk):
         
     def sv_dark_theme(self):
         sv_ttk.set_theme('dark')
-        
-    def forest_dark(self):
-        ttk.Style().theme_use('forest-dark')
-
-    def forest_light(self):
-        ttk.Style().theme_use('forest-light')
-        
-    def azure_dark(self):
-        ttk.Style().theme_use('azure-dark')
-        
-    def azure_light(self):
-        ttk.Style().theme_use('azure-light')
         
     def clam(self):
         ttk.Style().theme_use('clam')
